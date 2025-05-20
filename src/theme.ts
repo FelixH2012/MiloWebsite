@@ -45,15 +45,57 @@ const theme = extendTheme({
   styles: {
     global: {
       'html, body': {
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
         background: 'black',
         color: 'white',
-        cursor: 'crosshair',
+        overflow: 'hidden',
+      },
+      'body > div:first-of-type': {
+        width: '100%',
+        height: '100%',
+        overflow: 'auto',
+      },
+      '#root': {
+        width: '100%',
+        minHeight: '100%',
       },
       '::selection': {
         background: 'white',
         color: 'black',
+      },
+      '.custom-cursor': {
+        width: '30px',
+        height: '30px',
+        border: '2px solid white',
+        borderRadius: '50%',
+        position: 'fixed',
+        pointerEvents: 'none',
+        zIndex: 9999,
+        mixBlendMode: 'difference',
+        transition: 'transform 0.2s ease',
+      },
+      '.cursor-dot': {
+        width: '4px',
+        height: '4px',
+        background: 'white',
+        borderRadius: '50%',
+        position: 'fixed',
+        pointerEvents: 'none',
+        zIndex: 9999,
+      },
+      '.invert-circle': {
+        width: '80px',
+        height: '80px',
+        background: 'white',
+        borderRadius: '50%',
+        position: 'fixed',
+        pointerEvents: 'none',
+        zIndex: 9999,
+        mixBlendMode: 'difference',
+        transition: 'transform 0.3s ease-out, width 0.3s ease, height 0.3s ease',
       },
       '@keyframes glitch': glitchKeyframes,
       '@keyframes scanline': {
@@ -74,58 +116,53 @@ const theme = extendTheme({
   colors: {
     brand: {
       accent: '#FFFFFF',
+      purple: {
+        50: 'rgba(147, 112, 219, 0.05)',
+        100: 'rgba(147, 112, 219, 0.1)',
+        200: 'rgba(147, 112, 219, 0.2)',
+        300: 'rgba(147, 112, 219, 0.3)',
+        400: 'rgba(147, 112, 219, 0.4)',
+        500: 'rgba(147, 112, 219, 0.5)',
+        600: 'rgba(147, 112, 219, 0.6)',
+        700: 'rgba(147, 112, 219, 0.7)',
+        800: 'rgba(147, 112, 219, 0.8)',
+        900: 'rgba(147, 112, 219, 0.9)',
+      },
     },
   },
   components: {
     Container: {
       baseStyle: {
-        maxW: '1280px',
+        maxW: '100%',
+        w: '100%',
         px: { base: '4', md: '6', lg: '8' },
+        mx: 'auto',
       },
     },
     Button: {
       baseStyle: {
-        fontFamily: 'mono',
-        fontWeight: 'normal',
+        fontFamily: 'Futura, sans-serif',
+        fontWeight: 'medium',
         borderRadius: '0',
         textTransform: 'uppercase',
-        letterSpacing: '2px',
-        position: 'relative',
+        letterSpacing: '1px',
         transition: 'all 0.3s',
-        _before: {
-          content: '""',
-          position: 'absolute',
-          top: '2px',
-          left: '2px',
-          width: '100%',
-          height: '100%',
-          background: 'white',
-          zIndex: -1,
-          transition: 'all 0.3s',
+        _hover: {
+          transform: 'translateY(-2px)',
         },
       },
       variants: {
         solid: {
-          bg: 'black',
-          color: 'white',
-          border: '1px solid white',
+          bg: 'white',
+          color: 'black',
           _hover: {
-            transform: 'translate(-2px, -2px)',
-            _before: {
-              transform: 'translate(4px, 4px)',
-            },
+            bg: 'whiteAlpha.900',
           },
         },
         outline: {
           bg: 'transparent',
           color: 'white',
           border: '1px solid white',
-          _hover: {
-            bg: 'white',
-            color: 'black',
-          },
-        },
-        ghost: {
           _hover: {
             bg: 'whiteAlpha.100',
           },
@@ -135,60 +172,62 @@ const theme = extendTheme({
     Card: {
       baseStyle: {
         container: {
-          bg: 'black',
+          bg: 'transparent',
           borderRadius: '0',
-          border: '1px solid white',
-          position: 'relative',
+          border: '1px solid whiteAlpha.200',
+          transition: 'all 0.3s',
           overflow: 'hidden',
-          _before: {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            width: '2px',
-            height: '100%',
-            background: 'white',
-            animation: 'scanline 4s linear infinite',
-          },
-          _after: {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)',
-            animation: 'scanline 8s linear infinite',
-          },
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
           _hover: {
-            '& > *': {
-              animation: 'glitch 0.3s cubic-bezier(.25, .46, .45, .94) both 1',
-            },
+            borderColor: 'white',
           },
         },
+        body: {
+          padding: 6,
+          flex: 1,
+        },
+      },
+    },
+    SimpleGrid: {
+      baseStyle: {
+        width: '100%',
+        display: 'grid',
       },
     },
     Heading: {
       baseStyle: {
-        fontFamily: 'mono',
-        fontWeight: 'normal',
-        letterSpacing: '3px',
-        textTransform: 'uppercase',
-        position: 'relative',
-        display: 'inline-block'
+        fontFamily: 'Futura, sans-serif',
+        fontWeight: 'bold',
+        letterSpacing: '0',
+        textTransform: 'none',
+        color: 'white',
+      },
+      variants: {
+        hero: {
+          fontSize: { base: '4rem', md: '8rem', lg: '12rem' },
+          lineHeight: '0.9',
+          letterSpacing: '-2px',
+        },
       },
     },
     Text: {
       baseStyle: {
-        fontFamily: 'mono',
-        letterSpacing: '0.5px',
-        position: 'relative',
+        fontFamily: 'Futura, sans-serif',
+        letterSpacing: '0',
+        color: 'white',
+      },
+    },
+    Box: {
+      baseStyle: {
+        width: '100%',
       },
     },
   },
   fonts: {
-    heading: 'IBM Plex Mono, monospace',
-    body: 'IBM Plex Mono, monospace',
-    mono: 'IBM Plex Mono, monospace',
+    heading: 'Futura, sans-serif',
+    body: 'Futura, sans-serif',
   },
 })
 

@@ -52,9 +52,9 @@ const NavLink = (props: NavLinkProps) => {
 }
 
 const Links = [
-  { name: 'Work', to: '/' },
+  { name: 'Home', to: '/' },
   { name: 'Projects', to: '/projects' },
-  { name: 'Contact', to: '/contact' },
+  { name: 'Contact', to: '/contact' }
 ]
 
 export default function Navbar() {
@@ -66,14 +66,22 @@ export default function Navbar() {
         <Flex h={16} alignItems="center" justifyContent="space-between">
           <IconButton
             size="md"
-            icon={isOpen ? <CloseIcon />: <HamburgerIcon />}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label="Open Menu"
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
             variant="ghost"
           />
           <HStack spacing={8} alignItems="center">
-            <Text fontWeight="bold" fontSize="xl" letterSpacing="3px" textTransform="uppercase">
+            <Text
+              as={RouterLink}
+              to="/"
+              fontWeight="bold"
+              fontSize="xl"
+              letterSpacing="3px"
+              textTransform="uppercase"
+              _hover={{ textDecoration: 'none' }}
+            >
               F.H
             </Text>
             <HStack as="nav" spacing={8} display={{ base: 'none', md: 'flex' }}>
@@ -84,16 +92,7 @@ export default function Navbar() {
               ))}
             </HStack>
           </HStack>
-          <Button
-            as="a"
-            href="mailto:felix1337@felix1337.tech"
-            size="sm"
-            variant="outline"
-            display={{ base: 'none', md: 'inline-flex' }}
-            aria-label="Contact Felix1337 via email"
-          >
-            Contact
-          </Button>
+         
         </Flex>
 
         {isOpen ? (
@@ -104,16 +103,7 @@ export default function Navbar() {
                   {link.name}
                 </NavLink>
               ))}
-              <Button
-                as="a"
-                href="mailto:felix1337@felix1337.tech"
-                w="full"
-                size="sm"
-                variant="outline"
-                aria-label="Contact Felix1337 via email"
-              >
-                Contact
-              </Button>
+            
             </Stack>
           </Box>
         ) : null}
