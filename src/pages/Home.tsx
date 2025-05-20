@@ -1,7 +1,5 @@
 import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, Flex, Progress, VisuallyHidden } from '@chakra-ui/react'
 import { lazy, Suspense } from 'react'
-import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
-import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
 import { Helmet } from 'react-helmet'
 import { keyframes } from '@emotion/react'
 import { motion, useScroll, useTransform } from 'framer-motion'
