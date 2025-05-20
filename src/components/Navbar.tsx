@@ -1,112 +1,123 @@
-import { Box, Container, Flex, Link, Button, useDisclosure, IconButton, VStack } from '@chakra-ui/react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import {
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  Button,
+  useDisclosure,
+  Stack,
+  Container,
+  Text,
+} from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-import { motion } from 'framer-motion'
+import { Link as RouterLink } from 'react-router-dom'
 
-const MotionBox = motion(Box)
-
-const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
-  const location = useLocation()
-  const isActive = location.pathname === to
-
-  return (
-    <Link
-      as={RouterLink}
-      to={to}
-      px={4}
-      py={2}
-      position="relative"
-      color={isActive ? 'white' : 'whiteAlpha.800'}
-      _hover={{ color: 'white', textDecoration: 'none' }}
-    >
-      {children}
-      {isActive && (
-        <MotionBox
-          layoutId="activeNav"
-          position="absolute"
-          bottom="-1px"
-          left={0}
-          right={0}
-          height="2px"
-          bgGradient="brand.gradient"
-          initial={false}
-        />
-      )}
-    </Link>
-  )
+interface NavLinkProps {
+  children: React.ReactNode
+  to: string
 }
 
-const Navbar = () => {
-  const { isOpen, onToggle } = useDisclosure()
-  
+const NavLink = (props: NavLinkProps) => {
+  const { children, to } = props
+
   return (
     <Box
-      as="nav"
-      position="fixed"
-      top={0}
-      left={0}
-      right={0}
-      zIndex={1000}
-      bg="rgba(0, 0, 0, 0.8)"
-      backdropFilter="blur(10px)"
-      borderBottom="1px solid"
-      borderColor="glass.border"
+      as={RouterLink}
+      to={to}
+      px={2}
+      py={1}
+      position="relative"
+      _hover={{
+        textDecoration: 'none',
+        _after: {
+          width: '100%',
+        },
+      }}
+      _after={{
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '0%',
+        height: '1px',
+        bg: 'white',
+        transition: 'width 0.3s ease',
+      }}
     >
-      <Container>
-        <Flex h={16} align="center" justify="space-between">
-          <Link
-            as={RouterLink}
-            to="/"
-            fontSize="xl"
-            fontWeight="bold"
-            bgGradient="brand.gradient"
-            bgClip="text"
-            _hover={{ textDecoration: 'none' }}
-          >
-            Milo
-          </Link>
-
-          {/* Desktop Navigation */}
-          <Flex
-            display={{ base: 'none', md: 'flex' }}
-            align="center"
-            gap={8}
-          >
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/features">Features</NavLink>
-            <NavLink to="/about">About</NavLink>
-            <Button size="sm">
-              Get Started
-            </Button>
-          </Flex>
-
-          {/* Mobile Navigation Button */}
-          <IconButton
-            display={{ base: 'flex', md: 'none' }}
-            onClick={onToggle}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            variant="ghost"
-            aria-label="Toggle Navigation"
-          />
-        </Flex>
-
-        {/* Mobile Navigation Menu */}
-        <VStack
-          display={{ base: isOpen ? 'flex' : 'none', md: 'none' }}
-          py={4}
-          spacing={4}
-          align="stretch"
-        >
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/features">Features</NavLink>
-          <NavLink to="/about">About</NavLink>
-          <Button w="full">
-            Get Started
-          </Button>
-        </VStack>
-      </Container>
+      <Text textTransform="uppercase" letterSpacing="2px" fontSize="sm">
+        {children}
+      </Text>
     </Box>
   )
 }
 
-export default Navbar 
+const Links = [
+  { name: 'Work', to: '/' },
+  { name: 'Projects', to: '/projects' },
+  { name: 'Contact', to: '/contact' },
+]
+
+export default function Navbar() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  return (
+    <Box position="fixed" w="100%" zIndex={999} bg="black" borderBottom="1px solid" borderColor="whiteAlpha.200">
+      <Container maxW="container.xl">
+        <Flex h={16} alignItems="center" justifyContent="space-between">
+          <IconButton
+            size="md"
+            icon={isOpen ? <CloseIcon />: <HamburgerIcon />}
+            aria-label="Open Menu"
+            display={{ md: 'none' }}
+            onClick={isOpen ? onClose : onOpen}
+            variant="ghost"
+          />
+          <HStack spacing={8} alignItems="center">
+            <Text fontWeight="bold" fontSize="xl" letterSpacing="3px" textTransform="uppercase">
+              F.H
+            </Text>
+            <HStack as="nav" spacing={8} display={{ base: 'none', md: 'flex' }}>
+              {Links.map((link) => (
+                <NavLink key={link.name} to={link.to}>
+                  {link.name}
+                </NavLink>
+              ))}
+            </HStack>
+          </HStack>
+          <Button
+            as="a"
+            href="mailto:felix1337@felix1337.tech"
+            size="sm"
+            variant="outline"
+            display={{ base: 'none', md: 'inline-flex' }}
+            aria-label="Contact Felix1337 via email"
+          >
+            Contact
+          </Button>
+        </Flex>
+
+        {isOpen ? (
+          <Box pb={4} display={{ md: 'none' }}>
+            <Stack as="nav" spacing={4}>
+              {Links.map((link) => (
+                <NavLink key={link.name} to={link.to}>
+                  {link.name}
+                </NavLink>
+              ))}
+              <Button
+                as="a"
+                href="mailto:felix1337@felix1337.tech"
+                w="full"
+                size="sm"
+                variant="outline"
+                aria-label="Contact Felix1337 via email"
+              >
+                Contact
+              </Button>
+            </Stack>
+          </Box>
+        ) : null}
+      </Container>
+    </Box>
+  )
+} 

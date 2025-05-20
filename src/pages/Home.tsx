@@ -1,124 +1,294 @@
-import { Box, Container, Heading, Text, Button, SimpleGrid, Icon, VStack, Circle } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
-import { FiActivity, FiPieChart, FiTrendingUp } from 'react-icons/fi'
+import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Grid, GridItem } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
+import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
+import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
+import { motion, useAnimation } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 
 const MotionBox = motion(Box)
+const MotionGrid = motion(Grid)
+const MotionGridItem = motion(GridItem)
 
-const StatCard = ({ value, label }: { value: string; label: string }) => (
-  <VStack spacing={1} align="center">
-    <Circle
-      size={{ base: "120px", md: "140px", lg: "160px" }}
-      border="2px solid"
-      borderColor="brand.blue"
-      position="relative"
-    >
-      <Text fontSize={{ base: "2xl", md: "3xl" }} fontWeight="semibold">{value}</Text>
-    </Circle>
-    <Text color="whiteAlpha.800" fontSize="sm">{label}</Text>
-  </VStack>
-)
-
-const FeatureCard = ({ icon, title, description }: { icon: React.ElementType; title: string; description: string }) => (
-  <Box
-    bg="rgba(17, 25, 40, 0.8)"
-    borderRadius="xl"
-    p={6}
-    transition="all 0.2s"
-    _hover={{ bg: 'rgba(17, 25, 40, 0.9)' }}
-  >
-    <VStack spacing={4} align="flex-start">
-      <Icon as={icon} boxSize={6} color="brand.blue" />
-      <Heading size="md">{title}</Heading>
-      <Text fontSize="sm" color="whiteAlpha.800">{description}</Text>
-    </VStack>
-  </Box>
-)
+// Custom noise animation
+const noiseAnim = keyframes`
+  0% { transform: translate(0,0) }
+  10% { transform: translate(-5%,-5%) }
+  20% { transform: translate(-10%,5%) }
+  30% { transform: translate(5%,-10%) }
+  40% { transform: translate(-5%,15%) }
+  50% { transform: translate(-10%,5%) }
+  60% { transform: translate(15%,0) }
+  70% { transform: translate(0,10%) }
+  80% { transform: translate(-15%,0) }
+  90% { transform: translate(10%,5%) }
+  100% { transform: translate(5%,0) }
+`
 
 const Home = () => {
+  const controls = useAnimation()
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  
+  const skills = [
+    { name: 'JAVA', icon: FaJava },
+    { name: 'KOTLIN', icon: SiKotlin },
+    { name: 'REACT', icon: FaReact },
+    { name: 'JAVASCRIPT', icon: SiJavascript },
+    { name: 'TYPESCRIPT', icon: SiTypescript },
+    { name: 'PHP', icon: FaPhp },
+  ]
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e
+      const moveX = clientX - window.innerWidth / 2
+      const moveY = clientY - window.innerHeight / 2
+      const offset = 5
+      setMousePosition({ x: moveX / offset, y: moveY / offset })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   return (
-    <Box as="main" minH="100vh">
-      <Container  pb={20}>
-        <VStack spacing={{ base: 12, md: 16 }} align="stretch">
-          {/* Hero Section */}
-          <VStack spacing={6} align="center">
-            <MotionBox
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              textAlign="center"
-              w="full"
-            >
-              <Heading
-                as="h1"
-                size="2xl"
-                bgGradient="brand.gradient"
-                bgClip="text"
-                mb={4}
+    <>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Felix Hans",
+            "alternateName": "felix1337",
+            "url": "https://felix1337.tech",
+            "sameAs": [
+              "https://github.com/FelixH2012",
+              "https://felix1337.tech"
+            ],
+            "jobTitle": "Fullstack Web Developer",
+            "knowsAbout": ["Java", "Kotlin", "React", "JavaScript", "TypeScript", "PHP"],
+            "description": "Fullstack Web Developer with over three years of Java experience. Currently finishing high school and passionate about chess."
+          })}
+        </script>
+      </Helmet>
+      <Box 
+        as="main" 
+        sx={{
+          '&::before': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'url("data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%" height="100%" filter="url(%23noiseFilter)"/%3E%3C/svg%3E")',
+            opacity: 0.05,
+            animation: `${noiseAnim} 1s steps(2) infinite`,
+            pointerEvents: 'none',
+            zIndex: -1,
+          }
+        }}
+      >
+        <Container maxW="container.xl" pt={32} pb={20}>
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={8}>
+            <GridItem>
+              <MotionBox
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: 1, 
+                  x: 0,
+                  transform: `perspective(1000px) rotateY(${mousePosition.x * 0.01}deg) rotateX(${-mousePosition.y * 0.01}deg)`,
+                }}
+                transition={{ duration: 0.5 }}
               >
-                Track Your Nutrition
-                <br />
-                With Precision
-              </Heading>
-              <Text
-                fontSize="lg"
-                maxW="md"
-                mx="auto"
-                mb={8}
-                color="whiteAlpha.800"
+                <Text 
+                  textTransform="uppercase" 
+                  letterSpacing="3px" 
+                  mb={4}
+                  color="whiteAlpha.700"
+                  position="relative"
+                  display="inline-block"
+                  _after={{
+                    content: '"SYSTEM.INIT"',
+                    position: 'absolute',
+                    left: '0',
+                    color: 'rgba(255,255,255,0.1)',
+                    transform: 'translateX(-10px)',
+                  }}
+                >
+                  EXECUTE: profile.load()
+                </Text>
+                <Heading 
+                  as="h1" 
+                  size="2xl" 
+                  mb={6}
+                  lineHeight="1.2"
+                  sx={{
+                    'span': {
+                      display: 'block',
+                      position: 'relative',
+                      '&::before': {
+                        content: 'attr(data-text)',
+                        position: 'absolute',
+                        left: '2px',
+                        textShadow: '-2px 0 white',
+                        background: 'black',
+                        overflow: 'hidden',
+                        clip: 'rect(0,900px,0,0)',
+                        animation: 'glitch 2s infinite linear alternate-reverse',
+                      }
+                    }
+                  }}
+                >
+                  <span data-text="FELIX">&gt; FELIX</span>
+                  <span data-text="HANS">&gt; HANS</span>
+                </Heading>
+                <Text 
+                  fontSize="lg" 
+                  color="whiteAlpha.800" 
+                  maxW="md" 
+                  mb={8}
+                  sx={{
+                    '&::before': {
+                      content: '"> "',
+                      color: 'white',
+                    }
+                  }}
+                >
+                  Fullstack Web Developer with over three years of Java experience.
+                  Currently finishing high school and passionate about chess.
+                </Text>
+                <MotionBox
+                  initial={false}
+                  animate={{
+                    x: mousePosition.x * 0.1,
+                    y: mousePosition.y * 0.1,
+                  }}
+                >
+                  <Button
+                    as="a"
+                    href="https://github.com/FelixH2012"
+                    target="_blank"
+                    leftIcon={<FaGithub />}
+                    mr={4}
+                  >
+                    GitHub::Connect
+                  </Button>
+                  <Button
+                    as="a"
+                    href="#"
+                    target="_blank"
+                    variant="outline"
+                    leftIcon={<FaLinkedin />}
+                  >
+                    LinkedIn::Access
+                  </Button>
+                </MotionBox>
+              </MotionBox>
+            </GridItem>
+            <GridItem>
+              <MotionGrid
+                templateColumns="repeat(3, 1fr)"
+                gap={2}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
-                Monitor your daily nutrition intake with beautiful visualizations
-                and detailed insights to help you reach your health goals.
-              </Text>
-              <Button size="lg">
-                Start Tracking
-              </Button>
-            </MotionBox>
-          </VStack>
+                {skills.map((skill, index) => (
+                  <MotionGridItem
+                    key={skill.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Card h="full" position="relative">
+                      <CardBody
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        gap={4}
+                      >
+                        <Box
+                          as={skill.icon}
+                          boxSize="2rem"
+                          color="white"
+                        />
+                        <Text
+                          fontSize="sm"
+                          textTransform="uppercase"
+                          letterSpacing="1px"
+                          textAlign="center"
+                        >
+                          {skill.name}
+                        </Text>
+                      </CardBody>
+                    </Card>
+                  </MotionGridItem>
+                ))}
+              </MotionGrid>
+            </GridItem>
+          </Grid>
 
-          {/* Stats Section */}
-          <SimpleGrid 
-            columns={{ base: 1, md: 3 }} 
-            spacing={{ base: 8, md: 4 }}
-            justifyItems="center"
-            maxW="3xl"
-            mx="auto"
-            w="full"
-          >
-            <StatCard value="1,955" label="kcal today" />
-            <StatCard value="43g" label="protein" />
-            <StatCard value="209g" label="carbs" />
-          </SimpleGrid>
-
-          {/* Features Section */}
-          <VStack spacing={8} align="stretch">
-            <Heading size="lg" textAlign="center">Key Features</Heading>
-            <SimpleGrid 
-              columns={{ base: 1, md: 3 }} 
-              spacing={6}
-              maxW="4xl"
-              mx="auto"
-              w="full"
-            >
-              <FeatureCard
-                icon={FiPieChart}
-                title="Nutrition Tracking"
-                description="Track your macros and calories with our intuitive interface."
-              />
-              <FeatureCard
-                icon={FiTrendingUp}
-                title="Progress Analytics"
-                description="View detailed charts and insights about your nutrition habits."
-              />
-              <FeatureCard
-                icon={FiActivity}
-                title="Activity Monitoring"
-                description="Connect with your fitness apps to get a complete health picture."
-              />
+          <Box mt={20}>
+            <Heading as="h2" size="xl" mb={12}>
+              FEATURED::PROJECTS
+            </Heading>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
+              <Card>
+                <CardBody>
+                  <Text
+                    color="whiteAlpha.600"
+                    fontSize="sm"
+                    letterSpacing="2px"
+                    textTransform="uppercase"
+                    mb={4}
+                  >
+                    &gt; ChimeraEventBus
+                  </Text>
+                  <Text color="whiteAlpha.800" mb={4}>
+                    EventSystem for registering events, with a priority system, 
+                    caching and ease of use.
+                  </Text>
+                  <Button 
+                    as="a"
+                    href="https://github.com/FelixH2012/ChimeraEventBus"
+                    target="_blank"
+                    variant="outline"
+                  >
+                    VIEW::SOURCE
+                  </Button>
+                </CardBody>
+              </Card>
+              <Card>
+                <CardBody>
+                  <Text
+                    color="whiteAlpha.600"
+                    fontSize="sm"
+                    letterSpacing="2px"
+                    textTransform="uppercase"
+                    mb={4}
+                  >
+                    &gt; SongSync
+                  </Text>
+                  <Text color="whiteAlpha.800" mb={4}>
+                    Download songs from YouTube and set them to a consistent volume 
+                    using ffmpeg.
+                  </Text>
+                  <Button 
+                    as="a"
+                    href="https://github.com/FelixH2012/SongSync"
+                    target="_blank"
+                    variant="outline"
+                  >
+                    VIEW::SOURCE
+                  </Button>
+                </CardBody>
+              </Card>
             </SimpleGrid>
-          </VStack>
-        </VStack>
-      </Container>
-    </Box>
+          </Box>
+        </Container>
+      </Box>
+    </>
   )
 }
 
