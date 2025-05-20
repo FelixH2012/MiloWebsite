@@ -1,14 +1,9 @@
-import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack } from '@chakra-ui/react'
 import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
 import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
-import { useRef } from 'react'
 import { Helmet } from 'react-helmet'
 
 const Home = () => {
-  const cursorRef = useRef<HTMLDivElement>(null)
-  const cursorDotRef = useRef<HTMLDivElement>(null)
-  const inverterRef = useRef<HTMLDivElement>(null)
-  const isMobile = useBreakpointValue({ base: true, md: false })
   
   const skills = [
     { name: 'Java', icon: FaJava },
@@ -40,14 +35,6 @@ const Home = () => {
           })}
         </script>
       </Helmet>
-
-      {!isMobile && (
-        <>
-          <Box ref={cursorRef} className="custom-cursor" />
-          <Box ref={cursorDotRef} className="cursor-dot" />
-          <Box ref={inverterRef} className="invert-circle" />
-        </>
-      )}
 
       <Box 
         as="main" 
