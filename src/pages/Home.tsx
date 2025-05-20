@@ -2,7 +2,7 @@ import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Grid
 import { keyframes } from '@emotion/react'
 import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
 import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
-import { motion, useAnimation } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -26,7 +26,6 @@ const noiseAnim = keyframes`
 `
 
 const Home = () => {
-  const controls = useAnimation()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   
   const skills = [
