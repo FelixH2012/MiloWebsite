@@ -165,7 +165,7 @@ const Home = () => {
                 {/* Image */}
                 <Box
                   as="img"
-                  src="/foto.jpg"
+                  src="/foto.webp"
                   width="100%"
                   height="100%"
                   objectFit="cover"
