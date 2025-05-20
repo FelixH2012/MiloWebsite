@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://felix1337.github.io/MiloWebsite",
+  "homepage": "https://felix1337.tech",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
