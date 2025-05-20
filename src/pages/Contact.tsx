@@ -1,11 +1,6 @@
-import { Box, Container, Heading, Text, Stack, Button, HStack, Icon, useBreakpointValue } from '@chakra-ui/react'
-import { FaGithub, FaLinkedin, FaDiscord, FaEnvelope } from 'react-icons/fa'
-import { motion } from 'framer-motion'
-
-const MotionBox = motion(Box)
-
+import { Box, Container, Heading, Text, Stack, Button, HStack, Icon } from '@chakra-ui/react'
+import { FaGithub, FaDiscord, FaEnvelope } from 'react-icons/fa'
 const Contact = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const contactMethods = [
     {

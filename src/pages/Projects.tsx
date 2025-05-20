@@ -1,13 +1,8 @@
 import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, Tag, HStack, Icon } from '@chakra-ui/react'
 import { FaGithub, FaJava, FaReact } from 'react-icons/fa'
-import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
-import { motion } from 'framer-motion'
-import { useBreakpointValue } from '@chakra-ui/react'
-
-const MotionBox = motion(Box)
+import { SiJavascript } from 'react-icons/si'
 
 const Projects = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const projects = [
     {
