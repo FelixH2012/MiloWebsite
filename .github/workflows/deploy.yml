@@ -24,7 +24,8 @@ jobs:
         run: npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
       - name: Create ESLint config
         run: |
-          echo '{
+          echo 'module.exports = {
+            "root": true,
             "parser": "@typescript-eslint/parser",
             "plugins": ["@typescript-eslint"],
             "extends": [
@@ -34,9 +35,9 @@ jobs:
             "rules": {
               "@typescript-eslint/no-unused-vars": "error"
             }
-          }' > .eslintrc.json
+          }' > eslint.config.js
       - name: Run ESLint Fix
-        run: npx eslint . --ext .ts,.tsx --fix
+        run: npx eslint "src/**/*.{ts,tsx}" --fix
       - run: CI=false npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
