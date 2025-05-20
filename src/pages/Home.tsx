@@ -1,14 +1,10 @@
 import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, useBreakpointValue } from '@chakra-ui/react'
 import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
 import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
-import { motion } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Helmet } from 'react-helmet'
 
-const MotionBox = motion(Box)
-
 const Home = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const cursorRef = useRef<HTMLDivElement>(null)
   const cursorDotRef = useRef<HTMLDivElement>(null)
   const inverterRef = useRef<HTMLDivElement>(null)
@@ -22,48 +18,6 @@ const Home = () => {
     { name: 'TypeScript', icon: SiTypescript },
     { name: 'PHP', icon: FaPhp },
   ]
-
-  useEffect(() => {
-    if (isMobile) return
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e
-      
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${clientX - 15}px, ${clientY - 15}px)`
-      }
-      if (cursorDotRef.current) {
-        cursorDotRef.current.style.transform = `translate(${clientX - 2}px, ${clientY - 2}px)`
-      }
-      if (inverterRef.current) {
-        inverterRef.current.style.transform = `translate(${clientX - 40}px, ${clientY - 40}px)`
-      }
-
-      setMousePosition({ x: clientX, y: clientY })
-    }
-
-    const handleMouseDown = () => {
-      if (cursorRef.current) {
-        cursorRef.current.style.transform += ' scale(0.9)'
-      }
-    }
-
-    const handleMouseUp = () => {
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = cursorRef.current.style.transform.replace(' scale(0.9)', '')
-      }
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mousedown', handleMouseDown)
-    window.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mousedown', handleMouseDown)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isMobile])
 
   return (
     <>
@@ -162,7 +116,7 @@ const Home = () => {
                 </Button>
                 <Button
                   as="a"
-                  href="#"
+                  href="https://www.linkedin.com/in/felix-hans-a14508324?originalSubdomain=de"
                   target="_blank"
                   variant="outline"
                   leftIcon={<FaLinkedin />}
