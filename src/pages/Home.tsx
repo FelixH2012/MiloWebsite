@@ -1,9 +1,13 @@
-import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, Flex, Progress } from '@chakra-ui/react'
+import { Box, Container, Heading, Text, SimpleGrid, Card, CardBody, Button, Stack, Flex, Progress, VisuallyHidden } from '@chakra-ui/react'
+import { lazy, Suspense } from 'react'
 import { FaGithub, FaLinkedin, FaJava, FaReact, FaPhp } from 'react-icons/fa'
 import { SiKotlin, SiJavascript, SiTypescript } from 'react-icons/si'
 import { Helmet } from 'react-helmet'
 import { keyframes } from '@emotion/react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+
+// Lazy load icons
+const Icons = lazy(() => import('../components/Icons'))
 
 const MotionBox = motion(Box)
 
@@ -17,17 +21,21 @@ const Home = () => {
   `
 
   const skills = [
-    { name: 'Java', icon: FaJava, level: 90 },
-    { name: 'Kotlin', icon: SiKotlin, level: 85 },
-    { name: 'React', icon: FaReact, level: 80 },
-    { name: 'JavaScript', icon: SiJavascript, level: 85 },
-    { name: 'TypeScript', icon: SiTypescript, level: 75 },
-    { name: 'PHP', icon: FaPhp, level: 70 },
+    { name: 'Java', iconName: 'FaJava', level: 90 },
+    { name: 'Kotlin', iconName: 'SiKotlin', level: 85 },
+    { name: 'React', iconName: 'FaReact', level: 80 },
+    { name: 'JavaScript', iconName: 'SiJavascript', level: 85 },
+    { name: 'TypeScript', iconName: 'SiTypescript', level: 75 },
+    { name: 'PHP', iconName: 'FaPhp', level: 70 },
   ]
 
   return (
     <>
       <Helmet>
+        <html lang="de" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Portfolio von Felix Hans - 17-jähriger Auszubildender Anwendungsentwickler mit über drei Jahren Java-Erfahrung." />
+        <title>Felix Hans - Portfolio</title>
         <link href="https://use.typekit.net/[YOUR-KIT-CODE].css" rel="stylesheet" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -45,19 +53,49 @@ const Home = () => {
             "description": "17-year-old apprentice software developer with over three years of Java experience. Currently training as an application developer, passionate about chess and music production."
           })}
         </script>
+        <link rel="preload" href="/foto.webp" as="image" />
+        <meta name="theme-color" content="#000000" />
       </Helmet>
 
+      <Button
+        as="a"
+        href="#main-content"
+        position="fixed"
+        transform="translateY(-200%)"
+        transition="transform 0.3s"
+        top={0}
+        left={0}
+        zIndex="skipLink"
+        bg="purple.500"
+        color="white"
+        m={4}
+        _focus={{
+          transform: "translateY(0)",
+          boxShadow: "outline",
+        }}
+        _hover={{
+          bg: "purple.600"
+        }}
+      >
+        Zum Hauptinhalt springen
+      </Button>
+
       <Box 
-        as="main" 
+        as="main"
+        id="main-content"
         w="100vw"
         minH="100vh"
         display="flex"
         flexDirection="column"
         overflow="hidden"
         bg="black"
+        role="main"
+        aria-label="Portfolio von Felix Hans"
+        tabIndex={-1}
       >
         {/* Hero Section */}
         <Box
+          as="section"
           w="100%"
           flex="1"
           display="flex"
@@ -65,6 +103,7 @@ const Home = () => {
           position="relative"
           mt={{ base: 20, md: 32 }}
           mb={{ base: 16, md: 24 }}
+          aria-labelledby="hero-title"
           _before={{
             content: '""',
             position: 'absolute',
@@ -82,6 +121,7 @@ const Home = () => {
             <Stack spacing={8} w="100%">
               <Heading
                 as="h1"
+                id="hero-title"
                 fontSize={{ base: "4rem", md: "7rem", lg: "9rem" }}
                 lineHeight={{ base: "0.9", md: "0.8" }}
                 fontWeight="bold"
@@ -97,26 +137,11 @@ const Home = () => {
                 direction={{ base: "column", sm: "row" }}
                 spacing={4}
                 maxW={{ base: "full", sm: "320px" }}
+                aria-label="Social Media Links"
               >
-                <Button
-                  as="a"
-                  href="https://github.com/FelixH2012"
-                  target="_blank"
-                  leftIcon={<FaGithub />}
-                  size="lg"
-                >
-                  GitHub
-                </Button>
-                <Button
-                  as="a"
-                  href="https://www.linkedin.com/in/felix-hans-a14508324?originalSubdomain=de"
-                  target="_blank"
-                  variant="outline"
-                  leftIcon={<FaLinkedin />}
-                  size="lg"
-                >
-                  LinkedIn
-                </Button>
+                <Suspense fallback={<Box w={8} h={8} aria-hidden="true" />}>
+                  <Icons />
+                </Suspense>
               </Stack>
             </Stack>
           </Container>
@@ -124,11 +149,13 @@ const Home = () => {
 
         {/* Image Section */}
         <Box 
+          as="section"
           w="100%" 
           py={32}
           position="relative"
           bg="blackAlpha.50"
           overflow="hidden"
+          aria-labelledby="about-section"
           _before={{
             content: '""',
             position: 'absolute',
@@ -140,6 +167,7 @@ const Home = () => {
           }}
         >
           <Container maxW="container.xl">
+            <VisuallyHidden as="h2" id="about-section">Über mich</VisuallyHidden>
             <Flex
               direction={{ base: 'column', md: 'row' }}
               align="center"
@@ -166,6 +194,7 @@ const Home = () => {
                 <Box
                   as="img"
                   src="/foto.webp"
+                  alt="Portrait von Felix Hans"
                   width="100%"
                   height="100%"
                   objectFit="cover"
@@ -173,6 +202,18 @@ const Home = () => {
                   position="relative"
                   filter="grayscale(100%)"
                   transition="all 0.4s ease"
+                  loading="eager"
+                  decoding="async"
+                  sx={{
+                    '@media (max-width: 768px)': {
+                      width: '280px',
+                      height: '350px'
+                    },
+                    '@media (min-width: 769px)': {
+                      width: '380px',
+                      height: '480px'
+                    }
+                  }}
                   _hover={{
                     filter: "grayscale(0%)",
                     transform: "scale(1.02)"
@@ -182,6 +223,7 @@ const Home = () => {
 
               {/* Text Content */}
               <Box
+                as="article"
                 maxW="300px"
                 animation={`${fadeIn} 1s ease-out 0.2s`}
                 opacity="0"
@@ -216,10 +258,12 @@ const Home = () => {
 
         {/* Skills Section */}
         <Box 
+          as="section"
           w="100%" 
           py={20}
           position="relative"
           bg="transparent"
+          aria-labelledby="skills-title"
           _before={{
             content: '""',
             position: 'absolute',
@@ -233,29 +277,34 @@ const Home = () => {
           <Container maxW="container.xl" position="relative" zIndex={2}>
             <Heading
               as="h2"
+              id="skills-title"
               fontSize={{ base: "2xl", md: "3xl" }}
               mb={12}
               color="white"
             >
               Technologies
             </Heading>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} role="list">
               {skills.map((skill, index) => (
                 <MotionBox
                   key={skill.name}
+                  role="listitem"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
                   <Flex align="center" mb={2}>
-                    <Box as={skill.icon} size="24px" mr={3} color="white" />
-                    <Text fontWeight="medium" color="white">{skill.name}</Text>
+                    <Suspense fallback={<Box w={6} h={6} aria-hidden="true" />}>
+                      <Icons name={skill.iconName} />
+                    </Suspense>
+                    <Text fontWeight="medium" color="white" ml={3}>{skill.name}</Text>
                   </Flex>
                   <Progress 
                     value={skill.level} 
                     size="sm" 
                     bg="whiteAlpha.100"
+                    aria-label={`${skill.name} Kenntnisstand: ${skill.level}%`}
                     sx={{
                       '& > div': {
                         background: 'white'
@@ -294,6 +343,7 @@ const Home = () => {
           <Container maxW="container.xl" position="relative" zIndex={2}>
             <Heading
               as="h2"
+              id="projects-title"
               fontSize={{ base: "2xl", md: "3xl" }}
               mb={12}
               color="white"
@@ -303,6 +353,7 @@ const Home = () => {
             <SimpleGrid 
               columns={{ base: 1, md: 2 }} 
               spacing={8}
+              role="list"
             >
               <MotionBox
                 initial={{ opacity: 0, y: 20 }}
@@ -310,8 +361,17 @@ const Home = () => {
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
+                role="listitem"
               >
-                <Card bg="whiteAlpha.100" borderColor="whiteAlpha.200" borderWidth="1px">
+                <Card 
+                  bg="whiteAlpha.100" 
+                  borderColor="whiteAlpha.200" 
+                  borderWidth="1px"
+                  _focus={{
+                    boxShadow: "outline",
+                    transform: "translateY(-5px)",
+                  }}
+                >
                   <CardBody>
                     <Stack spacing={4}>
                       <Heading
@@ -333,12 +393,16 @@ const Home = () => {
                         as="a"
                         href="https://github.com/FelixH2012/ChimeraEventBus"
                         target="_blank"
+                        rel="noopener noreferrer"
                         variant="outline"
                         size="lg"
                         color="white"
                         borderColor="white"
                         _hover={{
                           bg: 'whiteAlpha.200'
+                        }}
+                        _focus={{
+                          boxShadow: "outline",
                         }}
                       >
                         View Project
@@ -354,8 +418,17 @@ const Home = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
+                role="listitem"
               >
-                <Card bg="whiteAlpha.100" borderColor="whiteAlpha.200" borderWidth="1px">
+                <Card 
+                  bg="whiteAlpha.100" 
+                  borderColor="whiteAlpha.200" 
+                  borderWidth="1px"
+                  _focus={{
+                    boxShadow: "outline",
+                    transform: "translateY(-5px)",
+                  }}
+                >
                   <CardBody>
                     <Stack spacing={4}>
                       <Heading
@@ -377,12 +450,16 @@ const Home = () => {
                         as="a"
                         href="https://github.com/FelixH2012/SongSync"
                         target="_blank"
+                        rel="noopener noreferrer"
                         variant="outline"
                         size="lg"
                         color="white"
                         borderColor="white"
                         _hover={{
                           bg: 'whiteAlpha.200'
+                        }}
+                        _focus={{
+                          boxShadow: "outline",
                         }}
                       >
                         View Project
